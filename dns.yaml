@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-dns-cluster-a
+  namespace: submariner-operator
+  labels:
+    app: external-dns-cluster-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: external-dns-cluster-a
+  template:
+    metadata:
+      labels:
+        app: external-dns-cluster-a
+    spec:
+      containers:
+      - name: dnsmasq
+        image: registry.access.redhat.com/ubi8/ubi-minimal:latest
+        ports:
+        - containerPort: 53
+        command: [ "/bin/sh", "-c", "microdnf install -y dnsmasq; ln -s /upstreamservers /etc/dnsmasq.d/upstreamservers; dnsmasq -k" ]
+        securityContext:
+          capabilities:
+            add: ["NET_ADMIN"]
+        volumeMounts:
+        - name: upstreamservers
+          mountPath: /upstreamservers
+      volumes:
+        - name: upstreamservers
+          configMap:
+            name: external-dnsmasq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: submariner-operator
+  name: external-dns-cluster-a
+spec:
+  ports:
+  - name: udp
+    port: 53
+    protocol: UDP
+    targetPort: 53
+  selector:
+    app: external-dns-cluster-a
