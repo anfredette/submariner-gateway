@@ -1,3 +1,4 @@
 broker-info.*
 kubeconfig.*
 upstreamservers.txt
+.idea
