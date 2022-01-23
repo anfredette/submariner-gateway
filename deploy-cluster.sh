@@ -14,16 +14,17 @@ sudo ip route add 8.8.8.8/32 dev $GATEWAY_ENDPOINT_DEVICE
 curl -sfL https://get.k3s.io | sh -
 
 # Fixup kubeconfig
-sudo cp /etc/rancher/k3s/k3s.yaml kubeconfig.cluster-a
-sudo chown $(id -u):$(id -g) kubeconfig.cluster-a
-IP=192.168.122.26
+sudo cp /etc/rancher/k3s/k3s.yaml kubeconfig.$CLUSTER_NAME
+sudo chown $(id -u):$(id -g) kubeconfig.$CLUSTER_NAME
+
 yq -i eval \
-'.clusters[].cluster.server |= sub("127.0.0.1", env(IP)) | .contexts[].name = "cluster-a" | .current-context = "cluster-a"' \
-kubeconfig.cluster-a
+'.clusters[].cluster.server |= sub("127.0.0.1", env(IP)) | .contexts[].name = env(CLUSTER_NAME)  | .current-context = env(CLUSTER_NAME)' \
+kubeconfig.$CLUSTER_NAME
 
 # Label this node as the gateway node
 kubectl label node $(hostname) submariner.io/gateway=true
 
+# Deploy Submariner
 if [ $CLUSTER_NAME == "cluster-a" ]; then
     #Use cluster-a as the Broker with Globalnet enabled
     subctl deploy-broker --globalnet
@@ -34,6 +35,7 @@ if [ $CLUSTER_NAME == "cluster-a" ]; then
     scp ./kubeconfig.$CLUSTER_NAME $CLUSTER_USER@$CLUSTER_B_IP:$CURRENT_DIR
 elif [ $CLUSTER_NAME == "cluster-b" ]; then
     subctl join broker-info.subm --clusterid $CLUSTER_NAME --natt=false --cable-driver $CABLE_DRIVER
+    #copy broker-info.subm and kubeconfig from cluster-b to cluster-a
     scp ./kubeconfig.$CLUSTER_NAME $CLUSTER_USER@$CLUSTER_A_IP:$CURRENT_DIR
 fi
 
