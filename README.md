@@ -49,10 +49,10 @@ submariner-operator             quay.io/submariner                              
 service-discovery               quay.io/submariner                                    devel           
 ✓ Showing versions
 ```
-5. execute `create-ext-svc.sh` on cluster-a to deploy a DNS server on cluster-a for non-cluster hosts
+5. execute `create-dns.sh` on cluster-a to deploy a DNS server on cluster-a for non-cluster hosts
 6. Setup test-vm as defined here: https://submariner.io/getting-started/quickstart/external/#set-up-non-cluster-hosts
 7. execute `create-ext-svc.sh` on cluster-a to create Service, Endpoints, ServiceExport to access the test-vm from cluster pods
-8. execute `create-svc.sh` on cluster-b to create a test nginx service
+8. execute `create-nginx-svc.sh` on cluster-b to create a test nginx service
 9. Run various connectivity tests defined in https://submariner.io/getting-started/quickstart/external/
 
 NOTE: as of this commit on 1/23/2022, not all tests are running correctly.
