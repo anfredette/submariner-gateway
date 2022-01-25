@@ -12,9 +12,9 @@ USER=axon
 
 export CLUSTER_NAME=$(hostname)
 if [ $CLUSTER_NAME == "cluster-a" ]; then
-    IP=$CLUSTER_A_IP
+    export IP=$CLUSTER_A_IP
 elif [ $CLUSTER_NAME == "cluster-b" ]; then
-    IP=$CLUSTER_B_IP
+    export IP=$CLUSTER_B_IP
 fi
 
 CABLE_DRIVER=vxlan
