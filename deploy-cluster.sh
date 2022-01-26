@@ -11,7 +11,12 @@
 sudo ip route add 8.8.8.8/32 dev $GATEWAY_ENDPOINT_DEVICE
 
 #Deploy k3s using default pod and service CIDRs
-curl -sfL https://get.k3s.io | sh -
+
+if [ $INSTALL_K3S_SKIP_DOWNLOAD == "true" ]; then
+    ./k3s-install.sh
+else
+    curl -sfL https://get.k3s.io | sh -
+fi
 
 # Fixup kubeconfig
 sudo cp /etc/rancher/k3s/k3s.yaml kubeconfig.$CLUSTER_NAME
@@ -37,5 +42,7 @@ elif [ $CLUSTER_NAME == "cluster-b" ]; then
     subctl join broker-info.subm --clusterid $CLUSTER_NAME --natt=false --cable-driver $CABLE_DRIVER
     #copy broker-info.subm and kubeconfig from cluster-b to cluster-a
     scp ./kubeconfig.$CLUSTER_NAME $CLUSTER_USER@$CLUSTER_A_IP:$CURRENT_DIR
+else
+    echo "ERROR: Unsupported cluster name: $CLUSTER_NAME"
 fi
 

@@ -20,5 +20,8 @@ elif [ $CLUSTER_NAME == "cluster-b" ]; then
     export IP=$CLUSTER_B_IP
 fi
 
-CABLE_DRIVER=vxlan
+#CABLE_DRIVER=vxlan
+CABLE_DRIVER=libreswan
+
+INSTALL_K3S_SKIP_DOWNLOAD=true
 
