@@ -58,21 +58,8 @@ The steps to install are as follows
 Note: the next two steps are needed to workaround two existing bugs.  They won't be needed and will be 
 removed after the bugs are fixed.
 
-9. Execute `kubectl get services` to find the Submariner "internal-service-name".  Then, execute 
-   `create-endpoint.sh <internal-service-name>` to manually create an endpoint for the external service.
+9. Execute `create-endpoint.sh <internal-service-name>` to manually create an endpoint for the external service.
 
-    For example:
-   ```
-   cluster-a:~/submariner-gateway$ kubectl get services
-   NAME                                          TYPE        CLUSTER-IP     EXTERNAL-IP     PORT(S)   AGE
-   kubernetes                                    ClusterIP   10.43.0.1      <none>          443/TCP   11m
-   test-vm                                       ClusterIP   10.43.21.100   <none>          80/TCP    4m31s
-   submariner-4cl54k5nvyvsg3p65n5la4lbtg5scllc   ClusterIP   10.43.226.88   242.0.255.252   80/TCP    4m30s
-   
-   cluster-a:~/submariner-gateway$ ./create-endpoint.sh submariner-4cl54k5nvyvsg3p65n5la4lbtg5scllc
-   endpoints/submariner-4cl54k5nvyvsg3p65n5la4lbtg5scllc created
-   ```
-   
 10. Execute `create-endpointslice.sh` to create an endpoint slice for the external service.
 
 11. Run various connectivity tests defined in https://submariner.io/getting-started/quickstart/external/
