@@ -34,12 +34,12 @@ if [ $CLUSTER_NAME == "cluster-a" ]; then
     #Use cluster-a as the Broker with Globalnet enabled
     subctl deploy-broker --globalnet
     # Pass in external CIDR
-    subctl join broker-info.subm --clusterid $CLUSTER_NAME --natt=false --clustercidr=${CLUSTER_CIDR},${EXTERNAL_CIDR} --cable-driver $CABLE_DRIVER
+    subctl join broker-info.subm --clusterid $CLUSTER_NAME --natt=false --clustercidr=${CLUSTER_CIDR},${EXTERNAL_CIDR} $CABLE_DRIVER $NATTPORT
     #copy broker-info.subm and kubeconfig from cluster-a to cluster-b
     scp ./broker-info.subm $CLUSTER_USER@$CLUSTER_B_IP:$CURRENT_DIR
     scp ./kubeconfig.$CLUSTER_NAME $CLUSTER_USER@$CLUSTER_B_IP:$CURRENT_DIR
 elif [ $CLUSTER_NAME == "cluster-b" ]; then
-    subctl join broker-info.subm --clusterid $CLUSTER_NAME --natt=false --cable-driver $CABLE_DRIVER
+    subctl join broker-info.subm --clusterid $CLUSTER_NAME --natt=false $CABLE_DRIVER $NATTPORT
     #copy broker-info.subm and kubeconfig from cluster-b to cluster-a
     scp ./kubeconfig.$CLUSTER_NAME $CLUSTER_USER@$CLUSTER_A_IP:$CURRENT_DIR
 else

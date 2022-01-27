@@ -20,8 +20,11 @@ elif [ $CLUSTER_NAME == "cluster-b" ]; then
     export IP=$CLUSTER_B_IP
 fi
 
-#CABLE_DRIVER=vxlan
-CABLE_DRIVER=libreswan
+CABLE_DRIVER=--cable-driver=vxlan
+#CABLE_DRIVER=--cable-driver=libreswan
+#NATTPORT=--nattport=4600
 
-INSTALL_K3S_SKIP_DOWNLOAD=true
+# To use the airgap install, set the following to "true"
+# See https://rancher.com/docs/k3s/latest/en/installation/airgap/ for details
+export INSTALL_K3S_SKIP_DOWNLOAD=false
 
